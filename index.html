@@ -162,20 +162,36 @@
             const resultDiv = document.getElementById('result');
             const custom = messageInput.value.trim();
 
-            const webhookURL = "https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY";
+            const websiteLink = "https://operator10-clan.github.io/OPERATOR1.0/";
 
-            const embed = {
-                title: "OPERATOR1.0 STATUS UPDATE",
-                description: custom || "Status updated.",
-                color: 0x555555,
-                timestamp: new Date().toISOString(),
-                thumbnail: { url: selectedEmoji }
-            };
+            let baseMessage = "";
+            const activeBtn = document.querySelector('.status-btn.active');
+            const statusName = activeBtn ? activeBtn.getAttribute('data-name') : "Status";
+
+            if (statusName === "Online") {
+                baseMessage = `✅ Website is now **ONLINE** and fully operational.\n\n🔗 ${websiteLink}`;
+            } else if (statusName === "Offline") {
+                baseMessage = `🔴 Website is currently **OFFLINE**.\n\n🔗 ${websiteLink}`;
+            } else if (statusName === "Maintenance") {
+                baseMessage = `🛠️ Website is **UNDER MAINTENANCE**. Please stand by.\n\n🔗 ${websiteLink}`;
+            } else if (statusName === "Loading") {
+                baseMessage = `⏳ Website is **LOADING** / Initializing...\n\n🔗 ${websiteLink}`;
+            }
+
+            const finalMessage = custom ? `${baseMessage}\n\n${custom}` : baseMessage;
+
+            const webhookURL = "https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY";
 
             const payload = {
                 username: "OPERATOR1.0 Command",
                 avatar_url: "https://i.imgur.com/h1pDjAx.png",
-                embeds: [embed]
+                embeds: [{
+                    title: "OPERATOR1.0 STATUS UPDATE",
+                    description: finalMessage,
+                    color: 0x555555,
+                    timestamp: new Date().toISOString(),
+                    thumbnail: { url: selectedEmoji }
+                }]
             };
 
             try {
