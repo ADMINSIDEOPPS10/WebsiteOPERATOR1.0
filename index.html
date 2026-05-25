@@ -14,7 +14,6 @@
             background: #0a0a0a;
             color: #e0e0e0;
             font-family: 'VT323', monospace;
-            overflow: auto;
         }
 
         .container {
@@ -40,11 +39,7 @@
             letter-spacing: 6px;
         }
 
-        .subtitle {
-            color: #888;
-            font-size: 1.6rem;
-            letter-spacing: 3px;
-        }
+        .subtitle { color: #888; font-size: 1.6rem; letter-spacing: 3px; }
 
         .panel {
             background: #1a1a1a;
@@ -55,7 +50,7 @@
 
         .status-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
@@ -63,25 +58,22 @@
         .status-btn {
             background: #222;
             border: 2px solid #555;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
         }
 
         .status-btn:hover, .status-btn.active {
             border-color: #aaa;
             background: #333;
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .status-btn img {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
+            image-rendering: pixelated;
         }
 
         textarea {
@@ -105,22 +97,14 @@
             color: #ddd;
             border: 3px solid #777;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
         button:hover {
             background: #333;
             border-color: #aaa;
-            box-shadow: 0 0 25px rgba(170,170,170,0.4);
         }
 
-        .status {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 1.4rem;
-            min-height: 30px;
-        }
-
+        .status { margin-top: 15px; text-align: center; font-size: 1.4rem; }
         .success { color: #00ff88; }
         .error { color: #ff4444; }
     </style>
@@ -133,67 +117,65 @@
         </header>
 
         <div class="panel">
-            <h2 style="color:#bbb; margin-bottom:15px; text-align:center;">DISCORD STATUS DISPATCH</h2>
+            <h2 style="color:#bbb; text-align:center; margin-bottom:15px;">DISCORD STATUS DISPATCH</h2>
 
-            <!-- Status Buttons -->
             <div class="status-buttons">
-                <div class="status-btn active" data-emoji="https://cdn.discordapp.com/emojis/1354898116502884523.webp?size=64" data-preset="Website is **ONLINE** and fully operational.">
+                <div class="status-btn active" data-name="Online" data-emoji="https://cdn.discordapp.com/emojis/1354898116502884523.webp?size=64">
                     <img src="https://cdn.discordapp.com/emojis/1354898116502884523.webp?size=64" alt="Online">
                     <span>ONLINE</span>
                 </div>
-                <div class="status-btn" data-emoji="https://cdn.discordapp.com/emojis/1354898017773289735.webp?size=64" data-preset="Website is currently **OFFLINE** for maintenance.">
+                <div class="status-btn" data-name="Offline" data-emoji="https://cdn.discordapp.com/emojis/1354898017773289735.webp?size=64">
                     <img src="https://cdn.discordapp.com/emojis/1354898017773289735.webp?size=64" alt="Offline">
                     <span>OFFLINE</span>
                 </div>
-                <div class="status-btn" data-emoji="https://cdn.discordapp.com/emojis/1354898104079618127.webp?size=64" data-preset="Website is **UNDER MAINTENANCE**. Please stand by.">
+                <div class="status-btn" data-name="Maintenance" data-emoji="https://cdn.discordapp.com/emojis/1354898104079618127.webp?size=64">
                     <img src="https://cdn.discordapp.com/emojis/1354898104079618127.webp?size=64" alt="Maintenance">
                     <span>MAINTENANCE</span>
                 </div>
-                <div class="status-btn" data-emoji="https://cdn.discordapp.com/emojis/1354898055706706160.webp?size=64&animated=true" data-preset="Website is **LOADING** / Initializing...">
+                <div class="status-btn" data-name="Loading" data-emoji="https://cdn.discordapp.com/emojis/1354898055706706160.webp?size=64&animated=true">
                     <img src="https://cdn.discordapp.com/emojis/1354898055706706160.webp?size=64&animated=true" alt="Loading">
                     <span>LOADING</span>
                 </div>
             </div>
 
-            <textarea id="message" placeholder="Custom message (optional)"></textarea>
+            <textarea id="message" placeholder="Additional message (optional)"></textarea>
             
-            <button onclick="sendToDiscord()">TRANSMIT STATUS UPDATE</button>
+            <button onclick="sendToDiscord()">TRANSMIT TO DISCORD</button>
             
             <div id="result" class="status"></div>
-        </div>
-
-        <div style="text-align:center; color:#666; font-size:1.2rem;">
-            Authorized Personnel Only • Tier 1 Clearance Required
         </div>
     </div>
 
     <script>
         let selectedEmoji = "https://cdn.discordapp.com/emojis/1354898116502884523.webp?size=64";
-        let selectedPreset = "Website is **ONLINE** and fully operational.";
 
-        // Handle status button clicks
         document.querySelectorAll('.status-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 selectedEmoji = btn.getAttribute('data-emoji');
-                selectedPreset = btn.getAttribute('data-preset');
             });
         });
 
         async function sendToDiscord() {
             const messageInput = document.getElementById('message');
             const resultDiv = document.getElementById('result');
-            const customText = messageInput.value.trim();
-
-            const finalMessage = customText ? `${selectedPreset}\n\n${customText}` : selectedPreset;
+            const custom = messageInput.value.trim();
 
             const webhookURL = "https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY";
+
+            const embed = {
+                title: "OPERATOR1.0 STATUS UPDATE",
+                description: custom || "Status updated.",
+                color: 0x555555,
+                timestamp: new Date().toISOString(),
+                thumbnail: { url: selectedEmoji }
+            };
 
             const payload = {
                 username: "OPERATOR1.0 Command",
                 avatar_url: "https://i.imgur.com/h1pDjAx.png",
-                content: `<${selectedEmoji}> **STATUS UPDATE**\n${finalMessage}`
+                embeds: [embed]
             };
 
             try {
@@ -204,10 +186,10 @@
                 });
 
                 if (response.ok) {
-                    resultDiv.innerHTML = `<span class="success">✅ TRANSMISSION SUCCESSFUL</span>`;
+                    resultDiv.innerHTML = `<span class="success">✅ STATUS SUCCESSFULLY SENT</span>`;
                     messageInput.value = "";
                 } else {
-                    resultDiv.innerHTML = `<span class="error">Transmission failed.</span>`;
+                    resultDiv.innerHTML = `<span class="error">Failed to send.</span>`;
                 }
             } catch (e) {
                 resultDiv.innerHTML = `<span class="error">Connection error.</span>`;
