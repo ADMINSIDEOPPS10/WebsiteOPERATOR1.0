@@ -3,53 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPERATOR1.0 | STATUS DISPATCH</title>
+    <title>OPERATOR1.0 | COMMAND PANEL</title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/h1pDjAx.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: #0a0a0a;
             color: #e0e0e0;
             font-family: 'VT323', monospace;
-            margin: 0;
-            padding: 20px;
+            overflow: auto;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 900px;
             margin: 40px auto;
-            background: rgba(30,30,30,0.9);
-            border: 3px solid #555;
             padding: 30px;
+            background: rgba(25,25,25,0.95);
+            border: 3px solid #555;
         }
 
-        h1 {
-            font-family: 'Press Start 2P', cursive;
+        header {
             text-align: center;
-            color: #ddd;
+            border-bottom: 3px solid #666;
+            padding-bottom: 20px;
             margin-bottom: 30px;
-            text-shadow: 0 0 10px #666;
+        }
+
+        .title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3.8rem;
+            color: #ddd;
+            text-shadow: 0 0 15px #666;
+            letter-spacing: 6px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+        }
+
+        .panel {
+            background: #1a1a1a;
+            border: 2px solid #555;
+            padding: 25px;
+            margin-bottom: 30px;
         }
 
         textarea {
             width: 100%;
-            height: 150px;
-            background: #1a1a1a;
+            height: 140px;
+            background: #111;
             border: 2px solid #666;
             color: #eee;
             font-family: 'VT323', monospace;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             padding: 15px;
-            resize: vertical;
         }
 
         button {
-            margin-top: 20px;
             width: 100%;
             padding: 18px;
+            margin-top: 15px;
             font-family: 'Press Start 2P', cursive;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             background: #1f1f1f;
             color: #ddd;
             border: 3px solid #777;
@@ -60,13 +80,14 @@
         button:hover {
             background: #333;
             border-color: #aaa;
-            box-shadow: 0 0 20px rgba(170,170,170,0.5);
+            box-shadow: 0 0 25px rgba(170,170,170,0.4);
         }
 
         .status {
             margin-top: 15px;
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
+            min-height: 30px;
         }
 
         .success { color: #00ff88; }
@@ -75,42 +96,48 @@
 </head>
 <body>
     <div class="container">
-        <h1>OPERATOR1.0<br>STATUS DISPATCH</h1>
-        
-        <p style="text-align:center; color:#aaa; margin-bottom:20px;">
-            Send live status update to clan Discord
-        </p>
+        <header>
+            <div class="title">OPERATOR1.0</div>
+            <div class="subtitle">COMMAND & CONTROL PANEL</div>
+        </header>
 
-        <textarea id="message" placeholder="Type your status update here..."></textarea>
-        
-        <button onclick="sendStatus()">SEND STATUS UPDATE</button>
+        <div class="panel">
+            <h2 style="color:#bbb; margin-bottom:15px;">DISCORD STATUS DISPATCH</h2>
+            <textarea id="message" placeholder="Enter status message to broadcast..."></textarea>
+            
+            <button onclick="sendToDiscord()">TRANSMIT STATUS UPDATE</button>
+            
+            <div id="result" class="status"></div>
+        </div>
 
-        <div id="result" class="status"></div>
+        <div style="text-align:center; color:#666; font-size:1.2rem;">
+            Authorized Personnel Only • Tier 1 Clearance Required
+        </div>
     </div>
 
     <script>
-        async function sendStatus() {
+        async function sendToDiscord() {
             const messageInput = document.getElementById('message');
             const resultDiv = document.getElementById('result');
-            const messageText = messageInput.value.trim();
+            const text = messageInput.value.trim();
 
-            if (!messageText) {
+            if (!text) {
                 resultDiv.innerHTML = `<span class="error">Message cannot be empty.</span>`;
                 return;
             }
 
-            // ←←← PUT YOUR WEBHOOK URL HERE ↓↓↓
+            // === PUT YOUR WEBHOOK URL HERE ===
             const webhookURL = "https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY";
 
-            if (webhookURL === "https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY") {
-                resultDiv.innerHTML = `<span class="error">Please set your Webhook URL first!</span>`;
+            if (webhookURL.includes("https://discord.com/api/webhooks/1508489317914513520/3qkO5HGEjmkaFsMjqhZiwbfEiOQM0AtRHoVGn7Okad20k1DZra05J1t5ORg08oMp_SNY")) {
+                resultDiv.innerHTML = `<span class="error">Please replace the webhook URL first!</span>`;
                 return;
             }
 
             const payload = {
                 username: "OPERATOR1.0 Command",
                 avatar_url: "https://i.imgur.com/h1pDjAx.png",
-                content: `**STATUS UPDATE**\n${messageText}`
+                content: `**🔴 STATUS UPDATE**\n${text}`
             };
 
             try {
@@ -121,13 +148,13 @@
                 });
 
                 if (response.ok) {
-                    resultDiv.innerHTML = `<span class="success">✅ Status successfully sent to Discord!</span>`;
-                    messageInput.value = ""; // Clear input
+                    resultDiv.innerHTML = `<span class="success">✅ TRANSMISSION SUCCESSFUL</span>`;
+                    messageInput.value = "";
                 } else {
-                    resultDiv.innerHTML = `<span class="error">Failed to send. Check webhook URL.</span>`;
+                    resultDiv.innerHTML = `<span class="error">Transmission failed. Check webhook.</span>`;
                 }
-            } catch (error) {
-                resultDiv.innerHTML = `<span class="error">Error: Could not reach Discord.</span>`;
+            } catch (e) {
+                resultDiv.innerHTML = `<span class="error">Connection error. Try again.</span>`;
             }
         }
     </script>
