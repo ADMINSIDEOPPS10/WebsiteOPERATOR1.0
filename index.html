@@ -45,7 +45,7 @@
             background: #1a1a1a;
             border: 2px solid #555;
             padding: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .status-buttons {
@@ -104,6 +104,18 @@
             border-color: #aaa;
         }
 
+        .website-btn {
+            background: #003300;
+            border: 3px solid #00aa00;
+            color: #00ff88;
+            margin-top: 10px;
+        }
+
+        .website-btn:hover {
+            background: #005500;
+            border-color: #00ff00;
+        }
+
         .status { margin-top: 15px; text-align: center; font-size: 1.4rem; }
         .success { color: #00ff88; }
         .error { color: #ff4444; }
@@ -141,8 +153,19 @@
             <textarea id="message" placeholder="Additional message (optional)"></textarea>
             
             <button onclick="sendToDiscord()">TRANSMIT TO DISCORD</button>
-            
-            <div id="result" class="status"></div>
+        </div>
+
+        <!-- Website Button -->
+        <div class="panel" style="text-align: center;">
+            <a href="https://operator10-clan.github.io/OPERATOR1.0/" target="_blank">
+                <button class="website-btn">🌐 GO TO PUBLIC WEBSITE</button>
+            </a>
+        </div>
+
+        <div id="result" class="status"></div>
+
+        <div style="text-align:center; color:#666; font-size:1.2rem; margin-top:20px;">
+            Authorized Personnel Only • Tier 1 Clearance Required
         </div>
     </div>
 
