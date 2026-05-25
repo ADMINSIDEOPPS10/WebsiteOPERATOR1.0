@@ -53,9 +53,31 @@
             margin-bottom: 30px;
         }
 
+        .emoji-select {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .emoji-btn {
+            background: #222;
+            border: 2px solid #555;
+            padding: 12px;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-btn:hover, .emoji-btn.active {
+            border-color: #aaa;
+            background: #333;
+            transform: scale(1.15);
+        }
+
         textarea {
             width: 100%;
-            height: 140px;
+            height: 160px;
             background: #111;
             border: 2px solid #666;
             color: #eee;
@@ -102,8 +124,17 @@
         </header>
 
         <div class="panel">
-            <h2 style="color:#bbb; margin-bottom:15px;">DISCORD STATUS DISPATCH</h2>
-            <textarea id="message" placeholder="Enter status message to broadcast..."></textarea>
+            <h2 style="color:#bbb; margin-bottom:15px; text-align:center;">DISCORD STATUS DISPATCH</h2>
+
+            <!-- Emoji Selection -->
+            <div class="emoji-select">
+                <div class="emoji-btn active" data-emoji="🟢" title="Online">🟢</div>
+                <div class="emoji-btn" data-emoji="🔴" title="Offline">🔴</div>
+                <div class="emoji-btn" data-emoji="🛠️" title="Maintenance">🛠️</div>
+                <div class="emoji-btn" data-emoji="⏳" title="Loading">⏳</div>
+            </div>
+
+            <textarea id="message" placeholder="Enter status message..."></textarea>
             
             <button onclick="sendToDiscord()">TRANSMIT STATUS UPDATE</button>
             
@@ -116,6 +147,17 @@
     </div>
 
     <script>
+        let selectedEmoji = "🟢";
+
+        // Emoji button selection
+        document.querySelectorAll('.emoji-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedEmoji = btn.getAttribute('data-emoji');
+            });
+        });
+
         async function sendToDiscord() {
             const messageInput = document.getElementById('message');
             const resultDiv = document.getElementById('result');
@@ -137,7 +179,7 @@
             const payload = {
                 username: "OPERATOR1.0 Command",
                 avatar_url: "https://i.imgur.com/h1pDjAx.png",
-                content: `**🔴 STATUS UPDATE**\n${text}`
+                content: `${selectedEmoji} **STATUS UPDATE**\n${text}`
             };
 
             try {
